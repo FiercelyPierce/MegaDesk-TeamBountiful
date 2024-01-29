@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Management.Instrumentation;
 using System.Windows.Forms;
 
 namespace MegaDesk_Cirks
@@ -19,31 +20,54 @@ namespace MegaDesk_Cirks
 
         private void SaveNewButton_Click(object sender, EventArgs e)
         {
-            // Create new DeskQuote object
-            //DeskQuote deskQuote = new DeskQuote
-            //{ 
-            //    CustomerName = NameInput.Text,
-            //    Desk = new Desk(
-            //        width: (int)DeskWidthInput.Value, 
-            //        depth: (int)DeskDepthInput.Value, 
-            //        numDrawers: (int)DrawerNumInput.Value, 
-            //        surfaceMaterial: (DeskMaterial)DeskMaterialInput.SelectedValue),
-            //    RushDays = (int)RushDaysInput.SelectedIndex
-            //};
+            // Create new Desk object and set properties
+            Desk desk = new Desk
+            {
+                Width = (int)DeskWidthInput.Value,
+                Depth = (int)DeskDepthInput.Value,
+                NumDrawers = (int)DrawerNumInput.Value,
+                SurfaceMaterial = (DeskMaterial)DeskMaterialInput.SelectedIndex
+            };
 
+            int rushDays = 0;
+
+            // Make a switch statement to set the RushDays property
+            switch (RushDaysInput.SelectedIndex)
+            {
+                case 0:
+                    rushDays = 3;
+                    break;
+                case 1:
+                    rushDays = 5;
+                    break;
+                case 2:
+                    rushDays = 7;
+                    break;
+                case 3:
+                    rushDays = 14;
+                    break;
+            }
+            
+            // Calculate quote price
+            decimal quotePrice = DeskQuote.CalculateQuotePrice(
+                desk, rushDays);
+            
+            // DateTime quoteDate = DateTime.Now;
             string quoteData =
                 $"Name: {NameInput.Text}\n" +
                 $"Width: {DeskWidthInput.Text}\n" +
                 $"Depth: {DeskDepthInput.Text}\n" +
                 $"Number of Drawers: {DrawerNumInput.Text} \n" +
                 $"Surface Material: {DeskMaterialInput.Text} \n" +
-                $"Rush Days: {RushDaysInput.Text}";
+                $"Rush Days: {RushDaysInput.Text}\n" +
+                $"Quote Price: ${quotePrice}\n" +
+                $"Date: 01/29/2024";
 
             // Show quote values display form and hide add quote form
             DisplayQuote displayQuoteForm = new DisplayQuote(quoteData);
             displayQuoteForm.Tag = this;
             displayQuoteForm.Show(this);
-            Hide();
+            this.Hide();
         }
 
         // Validate width input and display error message if invalid
@@ -95,6 +119,15 @@ namespace MegaDesk_Cirks
         private void DrawerNumInput_Validated(object sender, EventArgs e)
         {
             errorProviderNumDrawer.SetError(DrawerNumInput, "");
+        }
+
+        private void DeskDepthInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Only allow numbers to be entered
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
 
         private void DrawerNumInput_KeyPress(object sender, KeyPressEventArgs e)

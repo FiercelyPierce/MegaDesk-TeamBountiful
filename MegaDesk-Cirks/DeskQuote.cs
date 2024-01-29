@@ -102,6 +102,8 @@ namespace MegaDesk_Cirks
                         quotePrice += 40;
                     }
                     break;
+                default:
+                    break;
             }
 
             return quotePrice;

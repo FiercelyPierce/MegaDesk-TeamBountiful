@@ -11,11 +11,12 @@ namespace MegaDesk_Cirks
             DisplayQuoteBox.Text = saveData;
         }
 
-        private void DisplayCancelButton_Click(object sender, EventArgs e)
+        private void FinishQuoteButton_Click(object sender, EventArgs e)
         {
-            MainMenu mainMenuForm = (MainMenu)Tag;
-            mainMenuForm.Show();
-            Close();
+            MainMenu mainMenuForm = new MainMenu();
+            mainMenuForm.Tag = this;
+            mainMenuForm.Show(this);
+            this.Hide();
         }
     }
 }

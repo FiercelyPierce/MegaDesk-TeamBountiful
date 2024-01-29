@@ -28,20 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.DisplayCancelButton = new System.Windows.Forms.Button();
             this.DisplayQuoteBox = new System.Windows.Forms.RichTextBox();
+            this.FinishQuoteButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // DisplayCancelButton
-            // 
-            this.DisplayCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.DisplayCancelButton.Location = new System.Drawing.Point(397, 326);
-            this.DisplayCancelButton.Name = "DisplayCancelButton";
-            this.DisplayCancelButton.Size = new System.Drawing.Size(75, 23);
-            this.DisplayCancelButton.TabIndex = 0;
-            this.DisplayCancelButton.Text = "Cancel";
-            this.DisplayCancelButton.UseVisualStyleBackColor = true;
-            this.DisplayCancelButton.Click += new System.EventHandler(this.DisplayCancelButton_Click);
             // 
             // DisplayQuoteBox
             // 
@@ -51,14 +40,23 @@
             this.DisplayQuoteBox.TabIndex = 1;
             this.DisplayQuoteBox.Text = "";
             // 
+            // FinishQuoteButton
+            // 
+            this.FinishQuoteButton.Location = new System.Drawing.Point(397, 326);
+            this.FinishQuoteButton.Name = "FinishQuoteButton";
+            this.FinishQuoteButton.Size = new System.Drawing.Size(75, 23);
+            this.FinishQuoteButton.TabIndex = 2;
+            this.FinishQuoteButton.Text = "Finish";
+            this.FinishQuoteButton.UseVisualStyleBackColor = true;
+            this.FinishQuoteButton.Click += new System.EventHandler(this.FinishQuoteButton_Click);
+            // 
             // DisplayQuote
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.DisplayCancelButton;
             this.ClientSize = new System.Drawing.Size(484, 361);
+            this.Controls.Add(this.FinishQuoteButton);
             this.Controls.Add(this.DisplayQuoteBox);
-            this.Controls.Add(this.DisplayCancelButton);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DisplayQuote";
@@ -68,8 +66,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button DisplayCancelButton;
         private System.Windows.Forms.RichTextBox DisplayQuoteBox;
+        private System.Windows.Forms.Button FinishQuoteButton;
     }
 }

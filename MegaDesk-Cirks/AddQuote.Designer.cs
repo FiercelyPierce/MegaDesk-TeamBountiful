@@ -119,6 +119,7 @@
             this.DeskDepthInput.Name = "DeskDepthInput";
             this.DeskDepthInput.Size = new System.Drawing.Size(68, 20);
             this.DeskDepthInput.TabIndex = 8;
+            this.DeskDepthInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.DeskDepthInput_KeyPress);
             this.DeskDepthInput.Validating += new System.ComponentModel.CancelEventHandler(this.DeskDepthInput_Validating);
             this.DeskDepthInput.Validated += new System.EventHandler(this.DeskDepthInput_Validated);
             // 
@@ -202,7 +203,8 @@
             this.RushDaysInput.Items.AddRange(new object[] {
             "3 days",
             "5 days",
-            "7 days"});
+            "7 days",
+            "14 days"});
             this.RushDaysInput.Location = new System.Drawing.Point(250, 171);
             this.RushDaysInput.Name = "RushDaysInput";
             this.RushDaysInput.Size = new System.Drawing.Size(121, 21);
