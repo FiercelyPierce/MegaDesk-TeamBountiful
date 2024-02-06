@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+
 
 namespace MegaDesk_Cirks
 {
+    [JsonObject]
     internal class DeskQuote
     {
         public string CustomerName { get; set; }
@@ -12,6 +15,7 @@ namespace MegaDesk_Cirks
         public decimal QuotePrice { get; set; }
 
         public DeskQuote() { }
+
 
         public DeskQuote(string customerName, DateTime quoteDate, Desk desk, int rushDays)
         {

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace MegaDesk_Cirks
 {
     public partial class DisplayQuote : Form
     {
+
         public DisplayQuote(string saveData)
         {
             InitializeComponent();
@@ -18,5 +20,6 @@ namespace MegaDesk_Cirks
             mainMenuForm.Show(this);
             this.Hide();
         }
+
     }
 }

@@ -1,11 +1,14 @@
-﻿using System;
-using System.Management.Instrumentation;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace MegaDesk_Cirks
 {
     public partial class AddQuote : Form
     {
+        private const string QuotesFilePath = "quotes.json";
         public AddQuote()
         {
             InitializeComponent();
@@ -47,11 +50,19 @@ namespace MegaDesk_Cirks
                     rushDays = 14;
                     break;
             }
-            
+
             // Calculate quote price
             decimal quotePrice = DeskQuote.CalculateQuotePrice(
                 desk, rushDays);
-            
+
+            // Create a new instance of DeskQuote and set its properties
+            DeskQuote deskQuote = new DeskQuote(
+                NameInput.Text,
+                System.DateTime.Now, // or you can use a specific date/time as needed
+                desk,
+                rushDays
+            );
+
             // DateTime quoteDate = DateTime.Now;
             string quoteData =
                 $"Name: {NameInput.Text}\n" +
@@ -61,7 +72,9 @@ namespace MegaDesk_Cirks
                 $"Surface Material: {DeskMaterialInput.Text} \n" +
                 $"Rush Days: {RushDaysInput.Text}\n" +
                 $"Quote Price: ${quotePrice}\n" +
-                $"Date: 01/29/2024";
+                $"Date: {System.DateTime.Now.ToString("MM/dd/yyyy")}";
+
+            SaveQuoteToJsonFile(deskQuote);
 
             // Show quote values display form and hide add quote form
             DisplayQuote displayQuoteForm = new DisplayQuote(quoteData);
@@ -137,6 +150,39 @@ namespace MegaDesk_Cirks
             {
                 e.Handled = true;
             }
+        }
+
+        private void SaveQuoteToJsonFile(DeskQuote deskQuote)
+        {
+            List<DeskQuote> allQuotes = DeskQuote.GetAllQuotes();
+            allQuotes.Add(deskQuote);
+
+
+            var transformedObject = new
+            {
+                users = allQuotes.ConvertAll(q => new
+                {
+                    id = Guid.NewGuid().ToString(), // You may use a meaningful ID
+                    name = q.CustomerName,
+                    quoteDate = q.QuoteDate,
+                    desk = new
+                    {
+                        width = q.Desk.Width,
+                        depth = q.Desk.Depth,
+                        numDrawers = q.Desk.NumDrawers,
+                        surfaceMaterial = q.Desk.SurfaceMaterial.ToString()
+                    },
+                    rushDays = q.RushDays,
+                    quotePrice = q.QuotePrice
+                })
+            };
+
+            // Serialize the new object to JSON
+            string json = JsonConvert.SerializeObject(transformedObject, Formatting.Indented);
+
+
+            //string json = JsonConvert.SerializeObject(allQuotes, Formatting.Indented);
+            File.WriteAllText(QuotesFilePath, json);
         }
     }
 }
