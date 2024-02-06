@@ -16,5 +16,11 @@ namespace MegaDesk_Cirks
             mainMenuForm.Show();
             Close();
         }
+
+        private void ViewAllQuotes_Load(object sender, EventArgs e)
+        {
+            //quotes = 
+            //viewQuotesDataGrid.DataSource = quotes;
+        }
     }
 }
