@@ -11,6 +11,8 @@ namespace MegaDesk_Cirks
         public int RushDays { get; set; }
         public decimal QuotePrice { get; set; }
 
+        private static List<DeskQuote> _quotes = new List<DeskQuote>(); //Quote List
+
         public DeskQuote() { }
 
         public DeskQuote(string customerName, DateTime quoteDate, Desk desk, int rushDays)
@@ -20,6 +22,9 @@ namespace MegaDesk_Cirks
             Desk = desk;
             RushDays = rushDays;
             QuotePrice = CalculateQuotePrice(desk, rushDays);
+
+            // Add the current quote to the list
+            _quotes.Add(this);
         }
 
         // Calculate Quote Price
@@ -107,6 +112,11 @@ namespace MegaDesk_Cirks
             }
 
             return quotePrice;
+        }
+
+        public static List<DeskQuote> GetAllQuotes()  //method to return all quotes
+        {
+            return _quotes;
         }
     }
 }
