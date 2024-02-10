@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace MegaDesk_Cirks
 {
@@ -19,8 +22,11 @@ namespace MegaDesk_Cirks
 
         private void ViewAllQuotes_Load(object sender, EventArgs e)
         {
-            //quotes = 
-            //viewQuotesDataGrid.DataSource = quotes;
+            string jsonContent = File.ReadAllText("C:\\Users\\Aidan\\source\\repos\\MegaDesk-TeamBountiful\\MegaDesk-Cirks\\AllQuotes.json");
+            var allQuotes = JsonConvert.DeserializeObject<List<DeskQuote>>(jsonContent);
+            viewQuotesDataGrid.DataSource = allQuotes;
         }
+
+      
     }
 }

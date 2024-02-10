@@ -1,0 +1,16 @@
+[
+  {
+    "Customer Name": "Aidan Foushee",
+    "Surface Area": 650,
+    "Drawers": 3,
+    "Material": "Oak",
+    "Rush Order": 7
+  },
+  {
+    "Customer Name": "John Cena",
+    "Surface Area": 1000,
+    "Drawers": 0,
+    "Material": "RoseWood",
+    "Rush Order": 0
+  }
+]
