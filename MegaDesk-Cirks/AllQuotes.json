@@ -1,13 +1,14 @@
 [
   {
-    "Customer Name": "Aidan Foushee",
-    "Surface Area": 650,
-    "Drawers": 3,
+    "CustomerName": "Aidan Foushee",
+    "QuoteDate": "01/29/2024",
+    "Desk.NumDrawers": 3,
     "Material": "Oak",
-    "Rush Order": 7
+    "RushDays": 7,
+    "QuotePrice" : 470
   },
   {
-    "Customer Name": "John Cena",
+    "CustomerName": "John Cena",
     "Surface Area": 1000,
     "Drawers": 0,
     "Material": "RoseWood",
