@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
 
 namespace MegaDesk_Cirks
 {
@@ -27,9 +29,27 @@ namespace MegaDesk_Cirks
             _quotes.Add(this);
         }
 
+        private static int[,] ReadRushOrderPrices(string[] lines)
+        {
+            int[,] prices = new int[3, 3];
+            int row = 0;
+            for (int i = 0; i < lines.Length; i += 3)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    prices[row, col] = int.Parse(lines[i + col].Trim());
+                }
+                row++;
+            }
+            return prices;
+        }
+
         // Calculate Quote Price
         public static decimal CalculateQuotePrice(Desk desk, int rushDays)
         {
+            string[] lines = File.ReadAllLines("rushOrderPrices.txt");
+            int[,] rushPrices = ReadRushOrderPrices(lines);
+
             decimal quotePrice = 200;
 
             // Add surface area cost
@@ -62,56 +82,28 @@ namespace MegaDesk_Cirks
                     break;
             }
 
-            // Add rush order cost
-            switch (rushDays)
-            {
-                case 3:
-                    if (surfaceArea < 1000)
-                    {
-                        quotePrice += 60;
-                    }
-                    else if (surfaceArea >= 1000 && surfaceArea <= 2000)
-                    {
-                        quotePrice += 70;
-                    }
-                    else
-                    {
-                        quotePrice += 80;
-                    }
-                    break;
-                case 5:
-                    if (surfaceArea < 1000)
-                    {
-                        quotePrice += 40;
-                    }
-                    else if (surfaceArea >= 1000 && surfaceArea <= 2000)
-                    {
-                        quotePrice += 50;
-                    }
-                    else
-                    {
-                        quotePrice += 60;
-                    }
-                    break;
-                case 7:
-                    if (surfaceArea < 1000)
-                    {
-                        quotePrice += 30;
-                    }
-                    else if (surfaceArea >= 1000 && surfaceArea <= 2000)
-                    {
-                        quotePrice += 35;
-                    }
-                    else
-                    {
-                        quotePrice += 40;
-                    }
-                    break;
-                default:
-                    break;
-            }
+            // Determine rush order price based on rushDays and desk size
+            int sizeCategory = desk.Width * desk.Depth <= 1000 ? 0 : desk.Width * desk.Depth <= 2000 ? 1 : 2;
+            int rushCategory = rushDays == 3 ? 0 : rushDays == 5 ? 1 : rushDays == 7 ? 2 : 3;
 
-            return quotePrice;
+            if (rushCategory == 3)
+            {
+                return quotePrice;
+            }
+            else
+            {
+                int rushOrderPrice = rushPrices[rushCategory, sizeCategory];
+
+                // Add rush order price to quotePrice
+                quotePrice += rushOrderPrice;
+
+                return quotePrice;
+            }
+        }
+
+        public static List<DeskQuote> GetAllQuotes()  //method to return all quotes
+        {
+            return _quotes;
         }
 
         public static List<DeskQuote> GetAllQuotes()  //method to return all quotes

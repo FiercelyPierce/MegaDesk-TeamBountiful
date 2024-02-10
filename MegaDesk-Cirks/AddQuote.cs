@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
 using System.Management.Instrumentation;
 using System.Windows.Forms;
 
@@ -20,16 +22,8 @@ namespace MegaDesk_Cirks
 
         private void SaveNewButton_Click(object sender, EventArgs e)
         {
-            // Create new Desk object and set properties
-            Desk desk = new Desk
-            {
-                Width = (int)DeskWidthInput.Value,
-                Depth = (int)DeskDepthInput.Value,
-                NumDrawers = (int)DrawerNumInput.Value,
-                SurfaceMaterial = (DeskMaterial)DeskMaterialInput.SelectedIndex
-            };
-
             int rushDays = 0;
+            DateTime quoteDate = System.DateTime.Now;
 
             // Make a switch statement to set the RushDays property
             switch (RushDaysInput.SelectedIndex)
@@ -47,21 +41,42 @@ namespace MegaDesk_Cirks
                     rushDays = 14;
                     break;
             }
+
+            // Create new Desk object and set properties
+            Desk desk = new Desk
+            {
+                Width = (int)DeskWidthInput.Value,
+                Depth = (int)DeskDepthInput.Value,
+                NumDrawers = (int)DrawerNumInput.Value,
+                SurfaceMaterial = (DeskMaterial)DeskMaterialInput.SelectedIndex
+            };
+
+            // Create new DeskQuote object and set properties
+            DeskQuote deskQuote = new DeskQuote
+            {
+                CustomerName = NameInput.Text,
+                QuoteDate = quoteDate,
+                Desk = desk,
+                RushDays = rushDays,
+                QuotePrice = DeskQuote.CalculateQuotePrice(desk, rushDays)
+            };
             
-            // Calculate quote price
-            decimal quotePrice = DeskQuote.CalculateQuotePrice(
-                desk, rushDays);
+            // Get the quote price from the DeskQuote object
+            decimal quotePrice = deskQuote.QuotePrice;
             
             // DateTime quoteDate = DateTime.Now;
             string quoteData =
-                $"Name: {NameInput.Text}\n" +
-                $"Width: {DeskWidthInput.Text}\n" +
-                $"Depth: {DeskDepthInput.Text}\n" +
-                $"Number of Drawers: {DrawerNumInput.Text} \n" +
-                $"Surface Material: {DeskMaterialInput.Text} \n" +
-                $"Rush Days: {RushDaysInput.Text}\n" +
+                $"Name: {deskQuote.CustomerName}\n" +
+                $"Width: {desk.Width}\n" +
+                $"Depth: {desk.Depth}\n" +
+                $"Number of Drawers: {desk.NumDrawers} \n" +
+                $"Surface Material: {desk.SurfaceMaterial} \n" +
+                $"Rush Days: {rushDays}\n" +
                 $"Quote Price: ${quotePrice}\n" +
-                $"Date: 01/29/2024";
+                $"Date: {quoteDate}";
+
+            string json = JsonConvert.SerializeObject(DeskQuote._quotes);
+            File.WriteAllText(Path.Combine(Application.StartupPath, "quotes.json"), json);
 
             // Show quote values display form and hide add quote form
             DisplayQuote displayQuoteForm = new DisplayQuote(quoteData);
