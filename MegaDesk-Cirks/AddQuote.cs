@@ -60,9 +60,8 @@ namespace MegaDesk_Cirks
                 RushDays = rushDays,
                 QuotePrice = DeskQuote.CalculateQuotePrice(desk, rushDays)
             };
-            
-            // Get the quote price from the DeskQuote object
-            decimal quotePrice = deskQuote.QuotePrice;
+
+            deskQuote.SaveQuote(deskQuote);
             
             // DateTime quoteDate = DateTime.Now;
             string quoteData =
@@ -72,11 +71,8 @@ namespace MegaDesk_Cirks
                 $"Number of Drawers: {desk.NumDrawers} \n" +
                 $"Surface Material: {desk.SurfaceMaterial} \n" +
                 $"Rush Days: {rushDays}\n" +
-                $"Quote Price: ${quotePrice}\n" +
+                $"Quote Price: ${deskQuote.QuotePrice}\n" +
                 $"Date: {quoteDate}";
-
-            string json = JsonConvert.SerializeObject(DeskQuote._quotes);
-            File.WriteAllText(Path.Combine(Application.StartupPath, "quotes.json"), json);
 
             // Show quote values display form and hide add quote form
             DisplayQuote displayQuoteForm = new DisplayQuote(quoteData);

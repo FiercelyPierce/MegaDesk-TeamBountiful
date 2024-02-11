@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
@@ -13,20 +14,15 @@ namespace MegaDesk_Cirks
         public int RushDays { get; set; }
         public decimal QuotePrice { get; set; }
 
-        private static List<DeskQuote> _quotes = new List<DeskQuote>(); //Quote List
-
         public DeskQuote() { }
 
-        public DeskQuote(string customerName, DateTime quoteDate, Desk desk, int rushDays)
+        public DeskQuote(string customerName, DateTime quoteDate, Desk desk, int rushDays, int quotePrice)
         {
             CustomerName = customerName;
             QuoteDate = quoteDate;
             Desk = desk;
             RushDays = rushDays;
-            QuotePrice = CalculateQuotePrice(desk, rushDays);
-
-            // Add the current quote to the list
-            _quotes.Add(this);
+            QuotePrice = quotePrice;
         }
 
         private static int[,] ReadRushOrderPrices(string[] lines)
@@ -101,14 +97,21 @@ namespace MegaDesk_Cirks
             }
         }
 
-        public static List<DeskQuote> GetAllQuotes()  //method to return all quotes
+        internal void SaveQuote(DeskQuote deskQuote)
         {
-            return _quotes;
-        }
+            // Save the deskQuote object to a JSON file as a list of DeskQuote objects
+            List<DeskQuote> deskQuotes = new List<DeskQuote>();
+            string jsonContent;
+            
+            if (File.Exists("quotes.json"))
+            {
+                jsonContent = File.ReadAllText("quotes.json");
+                deskQuotes = JsonConvert.DeserializeObject<List<DeskQuote>>(jsonContent);
+            }
 
-        public static List<DeskQuote> GetAllQuotes()  //method to return all quotes
-        {
-            return _quotes;
+            deskQuotes.Add(deskQuote);
+            jsonContent = JsonConvert.SerializeObject(deskQuotes, Formatting.Indented);
+            File.WriteAllText("quotes.json", jsonContent);
         }
     }
 }
